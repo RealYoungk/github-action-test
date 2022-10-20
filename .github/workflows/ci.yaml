@@ -30,7 +30,7 @@ jobs:
       # echo "password" | base64
       # > cGFzc3dvcmQK
       - name: Create the Keystore
-        evn:
+        env:
           KEYSTORE_BASE64: ${{ secret.KEYSTORE_BASE64 }}
         run: |
           echo $KEYSTORE_BASE64 | base64 -d > $RUNNER_TEMP/my_production.keystore
