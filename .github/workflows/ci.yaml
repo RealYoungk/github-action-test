@@ -28,8 +28,12 @@ jobs:
       # play store 에 올리는 경우 여러가지 장점들로 인해 appbundle이 권장됨
       - run: flutter build appbundle
       # 이 작업은 GitHub 릴리스를 만들고 선택적으로 여기에 아티팩트를 업로드합니다.
-      - name: Create Release
-        uses: ncipollo/release-action@v1.11.1
+      - uses: actions/upload-artifact@v3
         with:
-          artifacts: "build/app/outputs/apk/debug/*.apk"
-          token: ${{ secrets.TOKEN }}
+          name: my-artifact
+          path: build/app/outputs/apk/debug/*.apk
+#      - name: Create Release
+#        uses: ncipollo/release-action@v1.11.1
+#        with:
+#          artifacts: "build/app/outputs/apk/debug/*.apk"
+#          token: ${{ secrets.TOKEN }}
