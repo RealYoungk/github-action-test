@@ -4,6 +4,9 @@ jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
+    # 레포지토리에 업로드를 위해 추가된 퍼미션
+    permissions:
+      contents: write
     steps:
       # 이 작업은 리포지토리를 로 체크아웃하여 $GITHUB_WORKSPACE워크플로가 리포지토리의 콘텐츠에 액세스할 수 있도록 합니다.
       - uses: actions/checkout@v1
@@ -22,8 +25,8 @@ jobs:
       # play store 에 올리는 경우 여러가지 장점들로 인해 appbundle이 권장됨
       - run: flutter build appbundle
       # 이 작업은 GitHub 릴리스를 만들고 선택적으로 여기에 아티팩트를 업로드합니다.
-      - name: Create a Release APK
-        uses: ncipollo/release-action@v1
+      - name: Create Release
+        uses: ncipollo/release-action@v1.11.1
         with:
           artifacts: "build/app/outputs/apk/debug/*.apk"
           token: ${{ secrets.TOKEN }}
