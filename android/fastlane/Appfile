@@ -1,0 +1,2 @@
+json_key_file("/Users/kim-youngjin/keys/pc-api-8094300715485549371-431-e86c50bcc88a.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.example.github_action") # e.g. com.krausefx.app

@@ -12,9 +12,9 @@ jobs:
         with:
           java-version: '12.x'
       # 여기서 우리는 액션 에서 사용할 Flutter 환경을 설정 하는 GitHub 액션 flutter-action 을 사용합니다.
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '1.7.8+hotfix.4'
+          flutter-version: '3.3.4'
       - run: flutter pub get
       - run: flutter test
       # "flutter build apk" 명령은 모든 대상 아키텍처를 포함하는 "뚱뚱한" 아카이브를 빌드합니다. "flutter build apk –split-per-abi" 명령은 분리된 apk의 아카이브를 빌드합니다(각 대상 아키텍처에 대해 하나씩). 앱이 매우 크거나 사용자가 데이터 비용을 지불해야 하는 지역에 있는 경우 APK 크기를 최소로 유지하는 것이 중요합니다. 따라서 "-split-per-abi" 옵션을 사용하는 것이 좋습니다.
