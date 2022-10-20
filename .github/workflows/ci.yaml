@@ -1,49 +1,27 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on: push
+name: Test, Build and Release apk
 jobs:
-  check-bats-version:
+  build:
+    name: Build APK
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      # 이 작업은 리포지토리를 로 체크아웃하여 $GITHUB_WORKSPACE워크플로가 리포지토리의 콘텐츠에 액세스할 수 있도록 합니다.
+      - uses: actions/checkout@v1
+      # 2단계에서는 setup-java 라는 다른 GitHub 작업을 사용하여 Android 앱을 빌드하는 데 필요한 Java 환경을 설정합니다 .
+      - uses: actions/setup-java@v1
         with:
-          distribution: 'zulu'
-          java-version: '11'
-      - uses: subosito/flutter-action@v2
+          java-version: '12.x'
+      # 여기서 우리는 액션 에서 사용할 Flutter 환경을 설정 하는 GitHub 액션 flutter-action 을 사용합니다.
+      - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.3.3'
-      - run: flutter clean
+          flutter-version: '1.7.8+hotfix.4'
       - run: flutter pub get
       - run: flutter test
-      - name: 🔧 Build APK
-        env:
-          KEY_JKS: ${{ secrets.KEY_JKS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
-        run: base64 -d <<< ${{ secrets.KEY_JKS }} > ./android/app/release-key.jks && flutter build apk --release -v
-      - name: 🔧 Build AppBundle
-        env:
-          KEY_JKS: ${{ secrets.KEY_JKS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
-        run: base64 -d <<< $KEY_JKS > ./android/app/release-key.jks && flutter build appbundle --release -v
-      - run: flutter build appbundle
-      - name: 📦 Upload apk artifact
-        uses: actions/upload-artifact@v2
+      # "flutter build apk" 명령은 모든 대상 아키텍처를 포함하는 "뚱뚱한" 아카이브를 빌드합니다. "flutter build apk –split-per-abi" 명령은 분리된 apk의 아카이브를 빌드합니다(각 대상 아키텍처에 대해 하나씩). 앱이 매우 크거나 사용자가 데이터 비용을 지불해야 하는 지역에 있는 경우 APK 크기를 최소로 유지하는 것이 중요합니다. 따라서 "-split-per-abi" 옵션을 사용하는 것이 좋습니다.
+      - run: flutter build apk --debug --split-per-abi
+      # 이 작업은 GitHub 릴리스를 만들고 선택적으로 여기에 아티팩트를 업로드합니다.
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
         with:
-          name: apk
-          path: build/app/outputs/apk/release/app-release.apk
-      - name: 📦 Upload appbundle artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: appbundle
-          path: build/app/outputs/bundle/release/app-release.aab
-      - name: 🚛 Upload to Release Branch
-        uses: s0/git-publish-subdir-action@develop
-        env:
-          REPO: self
-          BRANCH: release
-          FOLDER: build/app/outputs/apk/release
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MESSAGE: "Build: ({sha}) {msg}"
+          artifacts: "build/app/outputs/apk/debug/*.apk"
+          token: ${{ secrets.TOKEN }}
