@@ -30,8 +30,8 @@ jobs:
       # 이 작업은 GitHub 릴리스를 만들고 선택적으로 여기에 아티팩트를 업로드합니다.
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
-          path: build/app/outputs/apk/debug/*.apk
+          name: appbundle
+          path: build/app/outputs/bundle/release
 #      - name: Create Release
 #        uses: ncipollo/release-action@v1.11.1
 #        with:
