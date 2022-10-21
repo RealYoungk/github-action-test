@@ -21,7 +21,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.3.4'
-        evn:
+        env:
           KEY_JKS: ${{ secrets.KEY_JKS }}
           ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
