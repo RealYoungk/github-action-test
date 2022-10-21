@@ -25,7 +25,7 @@ jobs:
           KEY_JKS: ${{ secrets.KEY_JKS }}
           ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          run: echo $KEY_JKS > key.jks
+          run: echo -e "storeFile=$KEY_JKS\nkeyAlias=release\nkeyPassword=$KEY_PASSWORD\nstorePassword=$ALIAS_PASSWORD" > key.jks
 
       - run: flutter pub get
       - run: flutter test
